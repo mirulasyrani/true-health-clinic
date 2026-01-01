@@ -1,70 +1,107 @@
-import axios from 'axios';
+import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios';
+import { type ContactFormData, type AppointmentFormData } from '../lib/validations';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+// API response wrapper
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  success: boolean;
+}
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
+// Custom error class
+export class ApiError extends Error {
+  statusCode?: number;
+  originalError?: unknown;
+  
+  constructor(message: string, statusCode?: number, originalError?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+    this.statusCode = statusCode;
+    this.originalError = originalError;
+  }
+}
+
+// Create axios instance with default config
+const createApiClient = (): AxiosInstance => {
+  const client = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  // Request interceptor
+  client.interceptors.request.use(
+    (config) => {
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
+  // Response interceptor
+  client.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError) => {
+      const message = error.response?.data 
+        ? String(error.response.data) 
+        : error.message || 'An unexpected error occurred';
+      
+      throw new ApiError(message, error.response?.status, error);
+    }
+  );
+
+  return client;
+};
+
+const apiClient = createApiClient();
+
+// Generic API request handler
+async function apiRequest<T>(config: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  try {
+    const response: AxiosResponse<T> = await apiClient.request(config);
+    return { data: response.data, success: true };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return { error: error.message, success: false };
+    }
+    return { error: 'An unexpected error occurred', success: false };
+  }
+}
+
+// Contact API
+export const contactApi = {
+  sendMessage: async (data: ContactFormData): Promise<ApiResponse<void>> => {
+    return apiRequest({ method: 'POST', url: '/contact', data });
   },
-});
+};
 
-export interface Appointment {
-  id?: number;
-  name: string;
-  email: string;
-  phone: string;
-  appointmentDate: string;
-  service: string;
-  notes?: string;
-  status?: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
-  createdAt?: string;
-  updatedAt?: string;
-}
+// Appointment API
+export const appointmentApi = {
+  create: async (data: AppointmentFormData): Promise<ApiResponse<void>> => {
+    return apiRequest({ method: 'POST', url: '/appointments', data });
+  },
+};
 
-export interface ContactMessage {
-  id?: number;
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-  read?: boolean;
-  createdAt?: string;
-}
+// Backwards compatibility
+export const contactService = {
+  sendMessage: async (data: ContactFormData) => {
+    const result = await contactApi.sendMessage(data);
+    if (!result.success) throw new Error(result.error);
+    return result.data;
+  },
+};
 
 export const appointmentService = {
-  createAppointment: (appointment: Appointment) =>
-    api.post<Appointment>('/appointments', appointment),
-  
-  getAllAppointments: () =>
-    api.get<Appointment[]>('/appointments'),
-  
-  getAppointmentById: (id: number) =>
-    api.get<Appointment>(`/appointments/${id}`),
-  
-  updateAppointment: (id: number, appointment: Appointment) =>
-    api.put<Appointment>(`/appointments/${id}`, appointment),
-  
-  deleteAppointment: (id: number) =>
-    api.delete(`/appointments/${id}`),
+  createAppointment: async (data: AppointmentFormData) => {
+    const result = await appointmentApi.create(data);
+    if (!result.success) throw new Error(result.error);
+    return result.data;
+  },
 };
 
-export const contactService = {
-  sendMessage: (message: ContactMessage) =>
-    api.post<ContactMessage>('/contact', message),
-  
-  getAllMessages: () =>
-    api.get<ContactMessage[]>('/contact'),
-  
-  getMessageById: (id: number) =>
-    api.get<ContactMessage>(`/contact/${id}`),
-  
-  markAsRead: (id: number) =>
-    api.patch<ContactMessage>(`/contact/${id}/read`),
-  
-  deleteMessage: (id: number) =>
-    api.delete(`/contact/${id}`),
-};
+// Types
+export interface ContactMessage extends ContactFormData {}
+export interface Appointment extends AppointmentFormData {}
 
-export default api;
+export default apiClient;

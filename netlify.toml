@@ -1,0 +1,9 @@
+# Build configuration for deployment platforms
+
+# Output directory (Vite default)
+build.command = "cd frontend && npm install && npm run build"
+build.publish = "frontend/dist"
+
+# Node version
+[build.environment]
+NODE_VERSION = "20"
