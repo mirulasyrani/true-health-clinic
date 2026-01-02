@@ -31,7 +31,7 @@ function Navbar() {
             <li><Link to="/services" className={isActive('/services')} onClick={handleLinkClick}>Services</Link></li>
             <li><Link to="/contact" className={isActive('/contact')} onClick={handleLinkClick}>Contact</Link></li>
           </ul>
-          <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
+          <div className={`hamburger ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
             <span></span>
             <span></span>
             <span></span>
