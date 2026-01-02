@@ -7,7 +7,7 @@ interface HeroSlideshowProps {
 
 const HeroSlideshow = memo(({ slides, currentSlide }: HeroSlideshowProps) => {
   return (
-    <div style={{position: 'absolute', top: 0, right: 0, bottom: 0, left: '50%', overflow: 'hidden', zIndex: 1}}>
+    <div className="hero-slideshow" style={{position: 'absolute', top: 0, right: 0, bottom: 0, left: '50%', overflow: 'hidden', zIndex: 1}}>
       {slides.map((slide, index) => (
         <div
           key={slide}

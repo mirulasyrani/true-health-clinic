@@ -7,6 +7,10 @@ function Navbar() {
 
   const isActive = (path: string) => location.pathname === path ? 'active' : '';
 
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
+
   return (
     <nav className="navbar">
       <div className="container">
@@ -22,10 +26,10 @@ function Navbar() {
             />
           </div>
           <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
-            <li><Link to="/" className={isActive('/')}>Home</Link></li>
-            <li><Link to="/about" className={isActive('/about')}>About Us</Link></li>
-            <li><Link to="/services" className={isActive('/services')}>Services</Link></li>
-            <li><Link to="/contact" className={isActive('/contact')}>Contact</Link></li>
+            <li><Link to="/" className={isActive('/')} onClick={handleLinkClick}>Home</Link></li>
+            <li><Link to="/about" className={isActive('/about')} onClick={handleLinkClick}>About Us</Link></li>
+            <li><Link to="/services" className={isActive('/services')} onClick={handleLinkClick}>Services</Link></li>
+            <li><Link to="/contact" className={isActive('/contact')} onClick={handleLinkClick}>Contact</Link></li>
           </ul>
           <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
             <span></span>
