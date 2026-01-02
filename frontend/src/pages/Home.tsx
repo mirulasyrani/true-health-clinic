@@ -6,6 +6,7 @@ const Statistics = lazy(() => import('../components/Statistics'));
 const PanelCarousel = lazy(() => import('../components/PanelCarousel'));
 const FeaturesSection = lazy(() => import('../components/FeaturesSection'));
 const QuickServicesSection = lazy(() => import('../components/QuickServicesSection'));
+const TestimonialsSlider = lazy(() => import('../components/TestimonialsSlider'));
 
 // Import critical component directly
 import HeroSlideshow from '../components/HeroSlideshow';
@@ -69,6 +70,7 @@ function Home() {
         <Statistics />
         <PanelCarousel panels={PANEL_CLINICS} />
         <FeaturesSection />
+        <TestimonialsSlider />
         <QuickServicesSection />
       </Suspense>
     </div>
