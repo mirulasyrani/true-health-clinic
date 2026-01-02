@@ -1416,15 +1416,29 @@ html {
   }
 
   .hamburger {
-    display: flex;
+    display: flex !important;
     z-index: 1001;
     position: relative;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .hamburger:hover {
+    background: rgba(16, 185, 129, 0.1);
+  }
+
+  .hamburger:active {
+    background: rgba(16, 185, 129, 0.2);
   }
 
   .hamburger span {
     background-color: white;
     width: 28px;
     height: 3px;
+    border-radius: 2px;
+    display: block;
   }
 
   /* Hide desktop menu on mobile */
@@ -1438,7 +1452,7 @@ html {
     flex-direction: column;
     padding: 0;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    display: none;
+    display: none !important;
     border-top: 1px solid rgba(16, 185, 129, 0.3);
     gap: 0;
     max-height: calc(100vh - 80px);
@@ -1451,7 +1465,7 @@ html {
   }
 
   .nav-menu.active {
-    display: flex;
+    display: flex !important;
     opacity: 1;
     transform: translateY(0);
   }
@@ -1612,6 +1626,8 @@ html {
     padding-left: 0;
     text-align: center;
     margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .section-title::before {
@@ -1622,20 +1638,28 @@ html {
     font-size: 1rem;
     text-align: center;
     margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
   }
 
   /* Page Header */
   .page-header {
     padding: 3rem 0 2rem;
     min-height: auto;
+    text-align: center;
   }
 
   .page-header h1 {
     font-size: 2rem;
+    text-align: center;
   }
 
   .page-header p {
     font-size: 1rem;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /* Grids */
@@ -1654,6 +1678,17 @@ html {
   .service-card,
   .feature-card {
     padding: 1.5rem;
+    text-align: center;
+  }
+
+  .service-card h3,
+  .feature-card h3 {
+    text-align: center;
+  }
+
+  .service-card p,
+  .feature-card p {
+    text-align: center;
   }
 
   .service-detail-card {
