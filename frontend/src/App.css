@@ -1423,8 +1423,11 @@ html {
 
   .hamburger span {
     background-color: white;
+    width: 28px;
+    height: 3px;
   }
 
+  /* Hide desktop menu on mobile */
   .nav-menu {
     position: fixed;
     top: 80px;
@@ -1442,10 +1445,15 @@ html {
     overflow-y: auto;
     width: 100%;
     margin: 0;
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   .nav-menu.active {
     display: flex;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .nav-menu li {
@@ -1510,6 +1518,14 @@ html {
     flex: 1 1 auto;
     position: relative;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-text-content > div {
+    width: 100%;
+    text-align: center;
   }
 
   .hero h1 {
@@ -1523,6 +1539,7 @@ html {
     hyphens: auto;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     font-weight: 800;
+    width: 100%;
   }
 
   .hero h1 br {
@@ -1553,6 +1570,8 @@ html {
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
+    justify-content: center;
+    width: 100%;
   }
 
   /* Buttons */
